@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace helpers\html;
+namespace vakata\html;
 
 class TableRow
 {
