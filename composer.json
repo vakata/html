@@ -1,0 +1,26 @@
+{
+    "name": "vakata/html",
+    "description": "Minimal HTML web abstraction",
+    "keywords": [
+        "vakata",
+        "html"
+    ],
+    "homepage": "https://github.com/vakata/html",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "vakata",
+            "email": "github@vakata.com",
+            "homepage": "http://www.vakata.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php" : ">=8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "vakata\\html\\": "src"
+        }
+    }
+}
