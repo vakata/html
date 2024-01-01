@@ -17,12 +17,25 @@ class Form
      * @var array<int,Field>
      */
     protected array $fields = [];
+    /**
+     * @var array<string,Field>
+     */
+    protected array $fieldmap = [];
 
     public function __clone()
     {
         foreach ($this->fields as $k => $v) {
             $this->fields[$k] = clone $v;
+            $this->fieldmap[$this->fields[$k]->getName()] = $this->fields[$k];
             $this->fields[$k]->setForm($this);
+        }
+    }
+
+    public function refreshFieldMap(): void
+    {
+        $this->fieldmap = [];
+        foreach ($this->fields as $v) {
+            $this->fieldmap[$v->getName()] = $v;
         }
     }
 
@@ -30,13 +43,16 @@ class Form
     {
         $this->fields[] = $field;
         $field->setForm($this);
+        $this->fieldmap[$field->getName()] = $field;
         return $this;
     }
     public function removeField(string $name): Form
     {
         foreach ($this->fields as $k => $v) {
             if ($v->getName() === $name) {
+                $v->setForm(null);
                 unset($this->fields[$k]);
+                unset($this->fieldmap[$name]);
             }
         }
         return $this;
@@ -48,6 +64,7 @@ class Form
     public function setFields(array $fields): Form
     {
         $this->fields = [];
+        $this->fieldmap = [];
         foreach ($fields as $field) {
             $this->addField($field);
         }
@@ -55,6 +72,9 @@ class Form
     }
     public function hasField(string $name): bool
     {
+        if (isset($this->fieldmap[$name])) {
+            return true;
+        }
         foreach ($this->fields as $field) {
             if ($field->getName() === $name) {
                 return true;
@@ -64,6 +84,9 @@ class Form
     }
     public function getField(string $name): Field
     {
+        if (isset($this->fieldmap[$name])) {
+            return $this->fieldmap[$name];
+        }
         foreach ($this->fields as $field) {
             if ($field->getName() === $name) {
                 return $field;

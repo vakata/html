@@ -17,6 +17,10 @@ class Field
         $this->attr['type'] = $type;
         $this->options = $options;
     }
+    public function __clone()
+    {
+        $this->form = null;
+    }
 
     public function getType(string $default = 'text'): string
     {
@@ -35,6 +39,24 @@ class Field
     {
         return $this->setAttr('name', $value);
     }
+
+    public function setAttr(string $attr, mixed $value): self
+    {
+        $this->attr[$attr] = $value;
+        if ($attr === 'name' && isset($this->form)) {
+            $this->form->refreshFieldMap();
+        }
+        return $this;
+    }
+    public function setAttrs(array $attr): self
+    {
+        $this->attr = $attr;
+        if (isset($this->form)) {
+            $this->form->refreshFieldMap();
+        }
+        return $this;
+    }
+
     /**
      * @param mixed $default
      * @return mixed
@@ -115,6 +137,9 @@ class Field
     }
     public function setForm(Form $form = null): self
     {
+        if (isset($this->form) && isset($form) && $form !== $this->form) {
+            $this->form->refreshFieldMap();
+        }
         $this->form = $form;
         return $this;
     }
