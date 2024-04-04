@@ -226,4 +226,8 @@ class Field
         $this->hidden = true;
         return $this;
     }
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
 }
