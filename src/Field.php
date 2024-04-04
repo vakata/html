@@ -10,6 +10,7 @@ class Field
 
     protected ?Form $form = null;
     protected array $options = [];
+    protected bool $hidden = false;
 
     public function __construct(string $type = "text", array $attr = [], array $options = [])
     {
@@ -213,6 +214,16 @@ class Field
         if ($row) {
             $this->move(count($row->getFields()));
         }
+        return $this;
+    }
+    public function show(): self
+    {
+        $this->hidden = false;
+        return $this;
+    }
+    public function hide(): self
+    {
+        $this->hidden = true;
         return $this;
     }
 }
