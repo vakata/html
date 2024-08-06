@@ -73,11 +73,11 @@ class FormLayoutRow
         if (is_string($field)) {
             $field = $this->getForm()->hasField($field) ? $this->getForm()->getField($field) : null;
         }
-        return $field && in_array($field, $this->fields);
+        return $field && in_array($field, $this->fields, true);
     }
     public function hasText(string $text): bool
     {
-        return in_array($text, $this->fields);
+        return in_array($text, $this->fields, true);
     }
     public function getField(string $name): ?Field
     {
@@ -89,7 +89,7 @@ class FormLayoutRow
         if (is_string($field)) {
             $field = $this->getField($field);
         }
-        $i = array_search($field, $this->fields);
+        $i = array_search($field, $this->fields, true);
         return is_int($i) ? $i : null;
     }
     public function getFieldWidth(Field|string $field): ?int
@@ -106,12 +106,12 @@ class FormLayoutRow
     }
     public function getTextWidth(string $text): ?int
     {
-        $i = array_search($text, $this->fields);
+        $i = array_search($text, $this->fields, true);
         return $i !== false ? ($this->widths[$i] ?? null) : null;
     }
     public function setTextWidth(string $text, int $width): self
     {
-        $i = array_search($text, $this->fields);
+        $i = array_search($text, $this->fields, true);
         if ($i !== false) {
             $this->widths[$i] = $width;
         }

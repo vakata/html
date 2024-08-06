@@ -75,7 +75,7 @@ class FormLayout
     }
     public function getRowIndex(FormLayoutRow $row): int
     {
-        return (int)array_search($row, $this->rows);
+        return (int)array_search($row, $this->rows, true);
     }
     public function getForm(): Form
     {
