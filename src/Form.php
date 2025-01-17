@@ -11,6 +11,7 @@ class Form
 {
     use ElementTrait;
 
+    protected ?Validator $validator = null;
     protected ?FormLayout $layout = null;
     protected array $context = [];
     /**
@@ -171,41 +172,67 @@ class Form
         }
         return $this;
     }
-    public function validate(Validator $validator = null): self
+    public function getValidator(): ?Validator
     {
-        if (!$validator) {
-            foreach ($this->getFields() as $field) {
-                $field->delAttr('data-validate');
+        return $this->validator;
+    }
+    public function hasValidator(): bool
+    {
+        return isset($this->validator);
+    }
+    public function setValidator(Validator $validator): self
+    {
+        $this->validator = $validator;
+        $validator = json_decode(json_encode($validator, JSON_THROW_ON_ERROR), true);
+        foreach ($validator as $key => $data) {
+            if ($this->hasField($key)) {
+                $field = $this->getField($key);
+                $field->setAttr('data-validate', array_values($data));
             }
-        } else {
-            $validator = json_decode(json_encode($validator, JSON_THROW_ON_ERROR), true);
-            foreach ($validator as $key => $data) {
-                if ($this->hasField($key)) {
-                    $field = $this->getField($key);
-                    $field->setAttr('data-validate', array_values($data));
-                }
-                $tmp = explode('.', $key);
-                $tmp = implode('', array_map(function ($v, $k) {
-                    return $k ? '[' . ($v === '*' ? '' : $v) . ']' : $v;
-                }, $tmp, array_keys($tmp)));
-                if ($this->hasField($tmp)) {
-                    $field = $this->getField($tmp);
-                    $field->setAttr('data-validate', array_values($data));
-                }
-                if (strpos($key, '.*.')) {
-                    $key = explode('.*.', $key);
-                    if ($this->hasField($key[0])) {
-                        $form = $this->getField($key[0])->getOption('form');
-                        if ($form && $form->hasField($key[1])) {
-                            $form->getField($key[1])->setAttr('data-validate', array_values($data));
-                        }
-                        $form = $this->getField($key[0])->getOption('create');
-                        if ($form && $form->hasField($key[1])) {
-                            $form->getField($key[1])->setAttr('data-validate', array_values($data));
-                        }
+            $tmp = explode('.', $key);
+            $tmp = implode('', array_map(function ($v, $k) {
+                return $k ? '[' . ($v === '*' ? '' : $v) . ']' : $v;
+            }, $tmp, array_keys($tmp)));
+            if ($this->hasField($tmp)) {
+                $field = $this->getField($tmp);
+                $field->setAttr('data-validate', array_values($data));
+            }
+            if (strpos($key, '.*.')) {
+                $key = explode('.*.', $key);
+                if ($this->hasField($key[0])) {
+                    $form = $this->getField($key[0])->getOption('form');
+                    if ($form && $form->hasField($key[1])) {
+                        $form->getField($key[1])->setAttr('data-validate', array_values($data));
+                    }
+                    $form = $this->getField($key[0])->getOption('create');
+                    if ($form && $form->hasField($key[1])) {
+                        $form->getField($key[1])->setAttr('data-validate', array_values($data));
                     }
                 }
             }
+        }
+        return $this;
+    }
+    public function removeValidator(): self
+    {
+        foreach ($this->getFields() as $field) {
+            $field->delAttr('data-validate');
+        }
+        $this->validator = null;
+        return $this;
+    }
+    /**
+     * @param Validator|null $validator
+     * @return Form
+     * @throws Exception
+     * @deprecated
+     */
+    public function validate(Validator $validator = null): self
+    {
+        if (!$validator) {
+            $this->removeValidator();
+        } else {
+            $this->setValidator($validator);
         }
         return $this;
     }
