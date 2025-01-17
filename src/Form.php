@@ -182,6 +182,7 @@ class Form
     }
     public function setValidator(Validator $validator): self
     {
+        $this->removeValidator();
         $this->validator = $validator;
         $validator = json_decode(json_encode($validator, JSON_THROW_ON_ERROR), true);
         foreach ($validator as $key => $data) {
