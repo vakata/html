@@ -10,6 +10,9 @@ class TableRow
 
     protected mixed $data;
     protected array $class = [];
+    /**
+     * @var array<string,Button>
+     */
     protected array $operations = [];
 
     public function __construct(mixed $data)
@@ -38,6 +41,10 @@ class TableRow
             ($data->{$k} ?? null) :
             (is_array($data) && isset($data[$k]) ? $data[$k] : null);
     }
+    /**
+     * @param bool $includeHidden
+     * @return array<string,Button>
+     */
     public function getOperations(bool $includeHidden = false): array
     {
         if ($includeHidden) {
@@ -47,6 +54,10 @@ class TableRow
             return !$v->isHidden();
         });
     }
+    /**
+     * @param array<Button> $operations
+     * @return TableRow
+     */
     public function setOperations(array $operations): TableRow
     {
         $this->operations = [];

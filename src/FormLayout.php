@@ -65,6 +65,9 @@ class FormLayout
     {
         return $this->form->getField($name);
     }
+    /**
+     * @return array<FormLayoutRow>
+     */
     public function getRows(): array
     {
         return $this->rows;

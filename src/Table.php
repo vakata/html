@@ -10,8 +10,17 @@ class Table
 {
     use ElementTrait;
 
+    /**
+     * @var array<string,TableColumn>
+     */
     protected array $columns = [];
+    /**
+     * @var array<TableRow>
+     */
     protected array $rows = [];
+    /**
+     * @var array<string,Button>
+     */
     protected array $operations = [];
 
     public function __construct(array $columns = [], array $rows = [])
@@ -41,6 +50,9 @@ class Table
         unset($this->columns[$name]);
         return $this;
     }
+    /**
+     * @return array<string,TableColumn>
+     */
     public function getColumns(): array
     {
         return $this->columns;
@@ -58,6 +70,9 @@ class Table
         $this->rows[] = $row;
         return $this;
     }
+    /**
+     * @return array<TableRow>
+     */
     public function getRows(): array
     {
         return $this->rows;
@@ -70,6 +85,10 @@ class Table
         }
         return $this;
     }
+    /**
+     * @param bool $includeHidden
+     * @return array<string,Button>
+     */
     public function getOperations(bool $includeHidden = false): array
     {
         if ($includeHidden) {
@@ -79,6 +98,10 @@ class Table
             return !$v->isHidden();
         });
     }
+    /**
+     * @param array<Button> $operations
+     * @return Table
+     */
     public function setOperations(array $operations): Table
     {
         $this->operations = [];
@@ -105,6 +128,10 @@ class Table
     {
         return isset($this->operations[$name]) && ($includeHidden || !$this->operations[$name]->isHidden());
     }
+    /**
+     * @param array<string> $order
+     * @return Table
+     */
     public function setOrder(array $order): self
     {
         $temp = [];
@@ -113,9 +140,17 @@ class Table
                 $temp[$column] = $this->columns[$column];
             }
         }
+        foreach ($this->columns as $cname => $column) {
+            if (!isset($temp[$cname])) {
+                $temp[$cname] = $column->hide();
+            }
+        }
         $this->columns = $temp;
         return $this;
     }
+    /**
+     * @return array<string>
+     */
     public function getOrder(): array
     {
         return array_keys($this->columns);
