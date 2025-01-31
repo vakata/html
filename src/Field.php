@@ -64,7 +64,12 @@ class Field
      */
     public function getValue(mixed $default = null): mixed
     {
-        return $this->getAttr('value', $default);
+        $value = $this->getAttr('value', $default);
+        if (is_callable($value)) {
+            $value = call_user_func($value);
+            $this->setAttr('value', $value);
+        }
+        return $value;
     }
     /**
      * @param mixed $value

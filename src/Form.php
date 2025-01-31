@@ -149,7 +149,7 @@ class Form
     {
         foreach ($this->fields as $field) {
             $name = $field->getName();
-            if ($name) {
+            if ($name && !$field->isHidden()) {
                 $name = str_replace(['][', ']'], ['[', ''], $name);
                 $name = array_filter(
                     explode('[', $name),
