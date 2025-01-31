@@ -141,7 +141,7 @@ class Field
         $this->options = [];
         return $this;
     }
-    public function setForm(Form $form = null): self
+    public function setForm(?Form $form = null): self
     {
         if (isset($this->form) && isset($form) && $form !== $this->form) {
             $this->form->refreshFieldMap();

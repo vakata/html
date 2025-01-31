@@ -117,7 +117,7 @@ class Form
         }
         return $this->layout ? $this->layout->toArray() : [];
     }
-    public function setLayout(FormLayout|array $layout = null): self
+    public function setLayout(FormLayout|array|null $layout = null): self
     {
         $this->layout = is_array($layout) ? FormLayout::fromArray($this, $layout) : $layout;
         return $this;
@@ -231,7 +231,7 @@ class Form
      * @throws Exception
      * @deprecated
      */
-    public function validate(Validator $validator = null): self
+    public function validate(?Validator $validator = null): self
     {
         if (!$validator) {
             $this->removeValidator();
@@ -252,7 +252,7 @@ class Form
     /**
      * @return mixed
      */
-    public function getContext(string $key = null, mixed $default = null): mixed
+    public function getContext(?string $key = null, mixed $default = null): mixed
     {
         return $key === null ? $this->context : ($this->context[$key] ?? $default);
     }

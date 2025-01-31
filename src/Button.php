@@ -27,7 +27,7 @@ class Button
     {
         return $this->label;
     }
-    public function setLabel(string $label = null): Button
+    public function setLabel(?string $label = null): Button
     {
         $this->label = $label;
         return $this;
@@ -37,7 +37,7 @@ class Button
     {
         return $this->icon;
     }
-    public function setIcon(string $icon = null): Button
+    public function setIcon(?string $icon = null): Button
     {
         $this->icon = $icon;
         return $this;
